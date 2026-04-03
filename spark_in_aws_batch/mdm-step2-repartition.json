@@ -1,0 +1,21 @@
+{
+  "jobDefinitionName": "mdm-step2-repartition",
+  "type": "container",
+  "containerProperties": {
+    "image": "380078849537.dkr.ecr.us-east-1.amazonaws.com/pyspark-batch-repo:latest",
+    "fargatePlatformConfiguration": {
+      "platformVersion": "LATEST"
+    },
+    "resourceRequirements": [
+      { "value": "1.0", "type": "VCPU" },
+      { "value": "2048", "type": "MEMORY" }
+    ],
+    "jobRoleArn": "arn:aws:iam::380078849537:role/service_S3_full_access",
+    "executionRoleArn": "arn:aws:iam::380078849537:role/ECS_tasks_role",
+    "networkConfiguration": {
+      "assignPublicIp": "ENABLED"
+    }
+  },
+  "platformCapabilities": ["FARGATE"],
+  "retryStrategy": { "attempts": 1 }
+}

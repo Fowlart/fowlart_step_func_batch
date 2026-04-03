@@ -1,0 +1,56 @@
+{
+  "Comment": "A description of my state machine",
+  "StartAt": "Init state",
+  "States": {
+    "Init state": {
+      "Type": "Pass",
+      "Output": {
+        "Phrase": "{% $states.input.input_a %}",
+        "Number": "{% $states.input.input_b %}"
+      },
+      "Assign": {
+        "the_int": "{%$states.input.input_b%}",
+        "the_str": "{%$states.input.input_a%}"
+      },
+      "Next": "Main Choice"
+    },
+    "Main Choice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Next": "DetectSentiment",
+          "Condition": "{%$number($the_int) >= 10%}"
+        }
+      ],
+      "Default": "Fail"
+    },
+    "DetectSentiment": {
+      "Type": "Task",
+      "Comment": "The task of the `Request Response` pattern",
+      "Arguments": {
+        "LanguageCode": "en",
+        "Text": "{%($the_str)%}"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:comprehend:detectSentiment",
+      "Next": "Batch SubmitJob"
+    },
+    "Batch SubmitJob": {
+      "Type": "Task",
+      "Comment": "The task of the `synchronous` pattern",
+      "Resource": "arn:aws:states:::batch:submitJob.sync",
+      "Arguments": {
+        "JobDefinition": "arn:aws:batch:us-east-1:380078849537:job-definition/FowlartJobDefinition:1",
+        "JobQueue": "arn:aws:batch:us-east-1:380078849537:job-queue/FowlartJobQueue",
+        "JobName": "FowlartBatchJob"
+      },
+      "Next": "Success"
+    },
+    "Success": {
+      "Type": "Succeed"
+    },
+    "Fail": {
+      "Type": "Fail"
+    }
+  },
+  "QueryLanguage": "JSONata"
+}

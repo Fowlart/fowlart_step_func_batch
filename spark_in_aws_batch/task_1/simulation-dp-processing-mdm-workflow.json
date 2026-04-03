@@ -1,0 +1,23 @@
+{
+  "QueryLanguage": "JSONata",
+  "StartAt": "job_definition_task_1",
+  "States": {
+    "job_definition_task_1": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::batch:submitJob.sync",
+      "Arguments": {
+        "JobName": "{% 'job_definition_task_1_' & $replace($substring($now(), 0, 19), ':', '-') %}",
+        "JobDefinition": "arn:aws:batch:us-east-1:380078849537:job-definition/job_definition_task_1",
+        "JobQueue": "arn:aws:batch:us-east-1:380078849537:job-queue/FowlartJobQueue",
+        "ContainerOverrides": {
+          "Command": [
+            "task_1.py",
+            "s3a://fowlart-demo-bucket/mdm/spark/er/clusters/",
+            "s3a://fowlart-demo-bucket/mdm/spark/er/cluster_emails/"
+          ]
+        }
+      }
+     , "End": true
+    }
+  }
+}

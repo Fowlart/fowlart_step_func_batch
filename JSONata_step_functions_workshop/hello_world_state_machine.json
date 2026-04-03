@@ -1,0 +1,34 @@
+{
+  "Comment": "A description of my state machine",
+  "StartAt": "Init state",
+  "States": {
+    "Init state": {
+      "Type": "Pass",
+      "Output": {
+        "StateOutput": "{% $states.input.input_a %}",
+        "ExecutionWaitTimeInSeconds": "{% $states.input.input_b %}"
+      },
+      "Assign": {
+        "the_int": "{%$states.input.input_b%}"
+      },
+      "Next": "Main Choice"
+    },
+    "Main Choice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Next": "Success",
+          "Condition": "{%$number($the_int) >= 10%}"
+        }
+      ],
+      "Default": "Fail"
+    },
+    "Success": {
+      "Type": "Succeed"
+    },
+    "Fail": {
+      "Type": "Fail"
+    }
+  },
+  "QueryLanguage": "JSONata"
+}
