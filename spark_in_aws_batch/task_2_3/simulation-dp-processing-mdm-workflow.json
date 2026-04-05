@@ -1,0 +1,24 @@
+{
+  "QueryLanguage": "JSONata",
+  "StartAt": "job_definition_task_2",
+  "States": {
+    "job_definition_task_2": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::batch:submitJob.sync",
+      "Arguments": {
+        "JobName": "{% 'job_definition_task_2_' & $replace($substring($now(), 0, 19), ':', '-') %}",
+        "JobDefinition": "arn:aws:batch:us-east-1:380078849537:job-definition/job_definition_task_2",
+        "JobQueue": "arn:aws:batch:us-east-1:380078849537:job-queue/FowlartJobQueue",
+        "ContainerOverrides": {
+              "Command": ["-m", "mdm_spark.jobs.init_whl_task"],
+              "Environment": [
+                {
+                  "Name": "S3_INPUT_PATH",
+                  "Value": "s3a://fowlart-demo-bucket/mdm/spark/er/clusters/existing_clusters.json"
+                }]
+        }
+      },
+      "End": true
+    }
+  }
+}
