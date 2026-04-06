@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mdm_spark"
+version = "0.1.0"
+description = "MDM Spark Pipeline Package"
+dependencies = [
+    "pyspark>=3.5.0",
+    "delta-spark==3.1.0",
+    "boto3>=1.28.0"
+]
+
+[tool.setuptools.packages.find]
+# Explicitly include the package and its submodules
+include = ["mdm_spark", "mdm_spark.*"]
